@@ -137,7 +137,7 @@ DELETE FROM Purchases WHERE BookTime < '2020-01-01'
 
 --Sve sobe drugog hotela po redu koje imaju kapacitet 3 povećati kapacitet na 4
 
-UPDATE Hotels SET Capacity = 4 WHERE Id = (Select Id FROM Hotels WHERE Id = 2 AND Capacity = 3)
+UPDATE Rooms SET Capacity = 4 WHERE HotelId = 2 AND Capacity = 3
 
 --Dohvatiti povijesni pregled boravaka određene sobe, poredano po vremenu boravka
 
@@ -148,3 +148,5 @@ SELECT * FROM Purchases WHERE RoomId = 4 ORDER BY DATEDIFF(day, CheckinTime, Che
 SELECT * FROM Purchases WHERE (ServiceType = 'Pansion' OR ServiceType = 'Polupansion') AND RoomId = (SELECT Id FROM Hotels WHERE HotelName = 'Sunce')
 
 --Promovirati 2 zaposlenika sobne posluge u recepcioniste
+
+UPDATE TOP(2) Employees SET JobDescription = 'Receptionist' WHERE JobDescription = 'Cleaner'
