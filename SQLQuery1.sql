@@ -16,23 +16,24 @@ INSERT INTO Hotels(HotelName) VALUES
 
 CREATE TABLE Rooms(
 Id int PRIMARY KEY IDENTITY(1,1),
+RoomNumber int,
 HotelId int FOREIGN KEY REFERENCES Hotels(Id),
 Category nvarchar(100) NOT NULL,
 Capacity int NOT NULL,
 Price decimal(10,2) NOT NULL
 )
 
-INSERT INTO Rooms(HotelId ,Category, Capacity, Price) VALUES
-(1, 'Presidential', 5, 6000.00),
-(1, 'Room', 2, 900.00),
-(2, 'Room', 2, 600.00),
-(2, 'Suite', 3, 800.00),
-(3, 'Room', 2, 950.00),
-(3, 'Suite', 4, 4300.50),
-(4, 'Room', 2, 550.00),
-(4, 'Room', 2, 550.00),
-(5, 'Room', 2, 400),
-(5, 'Room', 2, 400)
+INSERT INTO Rooms(RoomNumber ,HotelId ,Category, Capacity, Price) VALUES
+(1000, 1, 'Presidential', 5, 6000.00),
+(512, 1, 'Room', 2, 900.00),
+(210, 2, 'Room', 2, 600.00),
+(500, 2, 'Suite', 3, 800.00),
+(420, 3, 'Room', 2, 950.00),
+(700, 3, 'Suite', 4, 4300.50),
+(110, 4, 'Room', 2, 550.00),
+(120, 4, 'Room', 2, 550.00),
+(303, 5, 'Room', 2, 400),
+(102, 5, 'Room', 2, 400)
 
 
 CREATE TABLE Employees(
@@ -106,13 +107,21 @@ INSERT INTO RoomService(EmployeeId, RoomId, EntryTime, ExitTime) VALUES
 
 --Dohvatiti sve sobe hotela određenog imena, i to poredane uzlazno po svom broju
 
+SELECT * FROM Rooms WHERE HotelId = (SELECT Id FROM Hotels WHERE HotelName = 'LeMeridien Lav')
 
 
 --Dohvatiti sve sobe u svim hotelima kojima broj počinje sa brojem 1
 
+SELECT * FROM Rooms WHERE RoomNumber LIKE '1%'
+
+
 --Dohvatiti samo ime i prezime svih čistačica u određenom hotelu
 
+Select FirstName, LastName FROM Employees WHERE HotelId = (SELECT Id FROM Hotels WHERE HotelName = 'LeMeridien Lav') AND JobDescription = 'Cleaner'
+
 --Dohvatiti kupnje od 1.12.2020. koje prelaze cijenu od 1000
+
+
 
 --Dohvatiti sve boravke u svim hotelima koji su trenutno u tijeku
 
