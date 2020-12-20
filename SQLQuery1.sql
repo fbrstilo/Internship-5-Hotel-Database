@@ -32,8 +32,8 @@ INSERT INTO Rooms(RoomNumber ,HotelId ,Category, Capacity, Price) VALUES
 (700, 3, 'Suite', 4, 4300.50),
 (110, 4, 'Room', 2, 550.00),
 (120, 4, 'Room', 2, 550.00),
-(303, 5, 'Room', 2, 400),
-(102, 5, 'Room', 2, 400)
+(303, 5, 'Room', 2, 400.00),
+(102, 5, 'Room', 2, 400.00)
 
 
 CREATE TABLE Employees(
@@ -75,18 +75,22 @@ GuestId int FOREIGN KEY REFERENCES Guests(Id),
 HotelId int FOREIGN KEY REFERENCES Hotels(Id),
 RoomId int FOREIGN KEY REFERENCES Rooms(Id),
 ServiceType nvarchar(50) NOT NULL,
-CheckinTime datetime2,
-CheckoutTime datetime2,
+CheckinTime datetime2 NOT NULL,
+CheckoutTime datetime2 NOT NULL,
+BookTime datetime2 NOT NULL,
 PriceTotal decimal(10,2),
 TransactionTime datetime2
 )
 
-INSERT INTO Purchases(RoomId, GuestId, ServiceType, CheckinTime, CheckoutTime, TransactionTime, PriceTotal) VALUES
-(1, 1, 'Noćenje', '2020-01-03 10:00', '2020-01-10 12:00', GETDATE(), 60000.00),
-(4, 2, 'Pansion', '2020-02-04 10:00', '2020-02-11 12:00', '2020-02-12 16:45', 9000.00),
-(5, 3, 'Polupansion', '2020-03-05 10:00', '2020-03-12 12:00', '2020-03-12 13:28', 10000.00),
-(8, 4, 'Noćenje', '2020-04-06 10:00', '2020-04-13 12:00', GETDATE(), 5500.00),
-(9, 5, 'Polupansion', '2018-08-15 10:00', '2018-08-30 12:00', '2018-08-31 13:20', 4300.00)
+INSERT INTO Purchases(RoomId, GuestId, ServiceType, BookTime, CheckinTime, CheckoutTime, TransactionTime, PriceTotal) VALUES
+(1, 1, 'Noćenje','2019-12-05 18:22', '2020-01-03 10:00', '2020-01-10 12:00', GETDATE(), 60000.00),
+(4, 2, 'Pansion','2020-01-05 18:22', '2020-02-04 10:00', '2020-02-11 12:00', '2020-02-12 16:45', 9000.00),
+(4, 2, 'Pansion','2019-01-05 18:22', '2019-02-04 10:00', '2019-02-06 12:00', '2019-02-12 16:45', 1600.00),
+(5, 3, 'Polupansion','2020-02-29 18:22', '2020-03-05 10:00', '2020-03-12 12:00', '2020-03-12 13:28', 10000.00),
+(8, 4, 'Noćenje','2019-12-05 18:22', '2020-04-06 10:00', '2020-04-13 12:00', GETDATE(), 5500.00),
+(9, 5, 'Polupansion','2019-12-05 18:22', '2018-08-15 10:00', '2018-08-30 12:00', '2018-08-31 13:20', 4300.00),
+(7, 2, 'Nocenje','2019-12-05 18:22', '2020-12-20 10:00', '2021-01-03 12:00','' , 7700.00)
+
 
 CREATE TABLE RoomService(
 Id int PRIMARY KEY IDENTITY (1,1),
@@ -107,7 +111,7 @@ INSERT INTO RoomService(EmployeeId, RoomId, EntryTime, ExitTime) VALUES
 
 --Dohvatiti sve sobe hotela određenog imena, i to poredane uzlazno po svom broju
 
-SELECT * FROM Rooms WHERE HotelId = (SELECT Id FROM Hotels WHERE HotelName = 'LeMeridien Lav')
+SELECT * FROM Rooms WHERE HotelId = (SELECT Id FROM Hotels WHERE HotelName = 'LeMeridien Lav') ORDER BY RoomNumber
 
 
 --Dohvatiti sve sobe u svim hotelima kojima broj počinje sa brojem 1
@@ -121,16 +125,26 @@ Select FirstName, LastName FROM Employees WHERE HotelId = (SELECT Id FROM Hotels
 
 --Dohvatiti kupnje od 1.12.2020. koje prelaze cijenu od 1000
 
-
+SELECT * FROM Purchases WHERE TransactionTime > '2020-12-01 00:00' AND PriceTotal > 1000
 
 --Dohvatiti sve boravke u svim hotelima koji su trenutno u tijeku
 
+SELECT * FROM Purchases WHERE CheckoutTime > GETDATE()
+
 --Izbrisati sve boravke koji su napravljeni prije 1.1.2020.
+
+DELETE FROM Purchases WHERE BookTime < '2020-01-01'
 
 --Sve sobe drugog hotela po redu koje imaju kapacitet 3 povećati kapacitet na 4
 
+UPDATE Hotels SET Capacity = 4 WHERE Id = (Select Id FROM Hotels WHERE Id = 2 AND Capacity = 3)
+
 --Dohvatiti povijesni pregled boravaka određene sobe, poredano po vremenu boravka
 
+SELECT * FROM Purchases WHERE RoomId = 4 ORDER BY DATEDIFF(day, CheckinTime, CheckoutTime)
+
 --Dohvatiti sve boravke koji su bili ili pansion ili polupansion, i to samo u određenom hotelu
+
+SELECT * FROM Purchases WHERE (ServiceType = 'Pansion' OR ServiceType = 'Polupansion') AND RoomId = (SELECT Id FROM Hotels WHERE HotelName = 'Sunce')
 
 --Promovirati 2 zaposlenika sobne posluge u recepcioniste
