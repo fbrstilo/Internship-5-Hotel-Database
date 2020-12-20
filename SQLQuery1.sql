@@ -80,12 +80,12 @@ PriceTotal decimal(10,2),
 TransactionTime datetime2
 )
 
-INSERT INTO Purchases(GuestId, RoomId, ServiceType, CheckinTime, CheckoutTime, TransactionTime, PriceTotal) VALUES
-(1, 'Noćenje', '2020-01-03 10:00', '2020-01-10 12:00', GETDATE(), 60000.00),
-(4, 'Pansion', '2020-02-04 10:00', '2020-02-11 12:00', '2020-02-12 16:45', 9000.00),
-(5, 'Polupansion', '2020-03-05 10:00', '2020-03-12 12:00', '2020-03-12 13:28', 10000.00),
-(8, 'Noćenje', '2020-04-06 10:00', '2020-04-13 12:00', GETDATE(), 5500.00),
-(9, 'Polupansion', '2018-08-15 10:00', '2018-08-30 12:00', '2018-08-31 13:20', 4300.00)
+INSERT INTO Purchases(RoomId, GuestId, ServiceType, CheckinTime, CheckoutTime, TransactionTime, PriceTotal) VALUES
+(1, 1, 'Noćenje', '2020-01-03 10:00', '2020-01-10 12:00', GETDATE(), 60000.00),
+(4, 2, 'Pansion', '2020-02-04 10:00', '2020-02-11 12:00', '2020-02-12 16:45', 9000.00),
+(5, 3, 'Polupansion', '2020-03-05 10:00', '2020-03-12 12:00', '2020-03-12 13:28', 10000.00),
+(8, 4, 'Noćenje', '2020-04-06 10:00', '2020-04-13 12:00', GETDATE(), 5500.00),
+(9, 5, 'Polupansion', '2018-08-15 10:00', '2018-08-30 12:00', '2018-08-31 13:20', 4300.00)
 
 CREATE TABLE RoomService(
 Id int PRIMARY KEY IDENTITY (1,1),
