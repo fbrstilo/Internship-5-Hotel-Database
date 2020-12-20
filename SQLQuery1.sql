@@ -1,0 +1,127 @@
+﻿CREATE DATABASE HotelDatabase
+
+USE HotelDatabase
+
+CREATE TABLE Hotels(
+Id int PRIMARY KEY IDENTITY (1,1),
+HotelName nvarchar(100) NOT NULL,
+)
+
+INSERT INTO Hotels(HotelName) VALUES
+('LeMeridien Lav'),
+('Sunce'),
+('Plaza'),
+('Marjan'),
+('San Antonio')
+
+CREATE TABLE Rooms(
+Id int PRIMARY KEY IDENTITY(1,1),
+HotelId int FOREIGN KEY REFERENCES Hotels(Id),
+Category nvarchar(100) NOT NULL,
+Capacity int NOT NULL,
+Price decimal(10,2) NOT NULL
+)
+
+INSERT INTO Rooms(HotelId ,Category, Capacity, Price) VALUES
+(1, 'Presidential', 5, 6000.00),
+(1, 'Room', 2, 900.00),
+(2, 'Room', 2, 600.00),
+(2, 'Suite', 3, 800.00),
+(3, 'Room', 2, 950.00),
+(3, 'Suite', 4, 4300.50),
+(4, 'Room', 2, 550.00),
+(4, 'Room', 2, 550.00),
+(5, 'Room', 2, 400),
+(5, 'Room', 2, 400)
+
+
+CREATE TABLE Employees(
+Id int PRIMARY KEY IDENTITY(1,1),
+HotelId int FOREIGN KEY REFERENCES Hotels(Id),
+FirstName nvarchar(50) NOT NULL,
+LastName nvarchar(50) NOT NULL,
+JobDescription nvarchar(100) NOT NULL
+)
+
+INSERT INTO Employees(FirstName, LastName, HotelId, JobDescription) VALUES
+('Gabrijel','Videc', 1,'Room service supervisor'),
+('Ante', 'Šarić', 1, 'Cleaner'),
+('Ivo','Andrić', 2,'Room service supervisor'),
+('Joško','Batina', 2,'Cleaner'),
+('Antonela','Kristić', 3,'Room service supervisor'),
+('Tina','Turner', 3,'Cleaner'),
+('Mate','Ivanišević', 4,'Room service supervisor'),
+('Mate','Matić', 4,'Cleaner'),
+('Ivan','Jujnović', 5,'Room service supervisor'),
+('Danijela','Jukić', 5,'Cleaner')
+
+CREATE TABLE Guests(
+Id int PRIMARY KEY IDENTITY(1,1),
+FirstName nvarchar(100) NOT NULL,
+LastName nvarchar(100) NOT NULL
+)
+
+INSERT INTO Guests(FirstName, LastName) VALUES
+('Stipe','Stipić'),
+('Josip','Josipović'),
+('Jeff','Daniels'),
+('Bob','Dylan'),
+('Ivo','Ivić')
+
+CREATE TABLE Purchases(
+Id int PRIMARY KEY IDENTITY(1,1),
+GuestId int FOREIGN KEY REFERENCES Guests(Id),
+HotelId int FOREIGN KEY REFERENCES Hotels(Id),
+RoomId int FOREIGN KEY REFERENCES Rooms(Id),
+ServiceType nvarchar(50) NOT NULL,
+CheckinTime datetime2,
+CheckoutTime datetime2,
+PriceTotal decimal(10,2),
+TransactionTime datetime2
+)
+
+INSERT INTO Purchases(GuestId, RoomId, ServiceType, CheckinTime, CheckoutTime, TransactionTime, PriceTotal) VALUES
+(1, 'Noćenje', '2020-01-03 10:00', '2020-01-10 12:00', GETDATE(), 60000.00),
+(4, 'Pansion', '2020-02-04 10:00', '2020-02-11 12:00', '2020-02-12 16:45', 9000.00),
+(5, 'Polupansion', '2020-03-05 10:00', '2020-03-12 12:00', '2020-03-12 13:28', 10000.00),
+(8, 'Noćenje', '2020-04-06 10:00', '2020-04-13 12:00', GETDATE(), 5500.00),
+(9, 'Polupansion', '2018-08-15 10:00', '2018-08-30 12:00', '2018-08-31 13:20', 4300.00)
+
+CREATE TABLE RoomService(
+Id int PRIMARY KEY IDENTITY (1,1),
+EmployeeId int FOREIGN KEY REFERENCES Employees(Id),
+RoomId int FOREIGN KEY REFERENCES Rooms(Id),
+EntryTime datetime2 NOT NULL,
+ExitTime datetime2
+)
+
+INSERT INTO RoomService(EmployeeId, RoomId, EntryTime, ExitTime) VALUES
+(2,1, '2018-08-30 12:00', '2018-08-30 13:00'),
+(4,4, '2020-04-13 12:00', '2020-04-13 13:00'),
+(5,6,'2020-03-12 12:00', '2020-03-12 13:00'),
+(8,8, '2020-02-11 12:00', '2020-02-11 13:00'),
+(9,10,'2020-01-10 12:00', '2020-01-10 13:00')
+
+
+
+--Dohvatiti sve sobe hotela određenog imena, i to poredane uzlazno po svom broju
+
+
+
+--Dohvatiti sve sobe u svim hotelima kojima broj počinje sa brojem 1
+
+--Dohvatiti samo ime i prezime svih čistačica u određenom hotelu
+
+--Dohvatiti kupnje od 1.12.2020. koje prelaze cijenu od 1000
+
+--Dohvatiti sve boravke u svim hotelima koji su trenutno u tijeku
+
+--Izbrisati sve boravke koji su napravljeni prije 1.1.2020.
+
+--Sve sobe drugog hotela po redu koje imaju kapacitet 3 povećati kapacitet na 4
+
+--Dohvatiti povijesni pregled boravaka određene sobe, poredano po vremenu boravka
+
+--Dohvatiti sve boravke koji su bili ili pansion ili polupansion, i to samo u određenom hotelu
+
+--Promovirati 2 zaposlenika sobne posluge u recepcioniste
